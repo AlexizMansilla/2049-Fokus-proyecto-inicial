@@ -1,13 +1,18 @@
 const html = document.querySelector('html');
 const botonCorto = document.querySelector('.app__card-button--corto')
 const botonEnfoque = document. querySelector('.app__card-button--enfoque')
-const botonLargo = document.querySelector('.app__card-button--largo')
+const botonLargo = document.querySelector('.app__card-button--largo');
 const banner = document.querySelector('.app__image')
 const titulo = document.querySelector('.app__title')
 const botones = document.querySelectorAll('.app__card-button')
 const inputEnfoqueMusica = document.querySelector('#alternar-musica')
+const botonIniciarPausar = document.querySelector('#start-pause') 
+const textoIniciarPausar = document.querySelector('#start-pause span') 
+
 const musica = new Audio('./sonidos/luna-rise-part-one.mp3')
-const botonIniciarPausar = document.querySelector('#start-pause')    
+const audioPlay = new Audio('./sonidos/play.wav');
+const audioPausa = new Audio('./sonidos/pause.mp3');
+const audioTiempoFinalizado = new Audio('./sonidos/beep.mp3');
 
 let tiempoTranscurridoEnSegundo = 5
 let idIntervalo= null
@@ -70,11 +75,13 @@ function cambiarContexto(contexto){
 }
 
 const cuentaRegresiva = () => {
-   if(tiempoTranscurridoEnSegundo<= 0){
-    reiniciar()
-    alert('Tiempo final')
-    return
+    if(tiempoTranscurridoEnSegundo <= 0){
+        audioTiempoFinalizado .play();  
+        alert('Tiempo finalizado')
+        reiniciar()
+        return
    }
+    textoIniciarPausar.textContent = "Pausar"
     tiempoTranscurridoEnSegundo -= 1
     console.log("Temporizador:" + tiempoTranscurridoEnSegundo)  
 }
@@ -82,14 +89,17 @@ const cuentaRegresiva = () => {
 botonIniciarPausar.addEventListener('click', iniciarPausar)
 
 function iniciarPausar(){
-    if(idIntervalo){
+     if(idIntervalo){
+        audioPausa.play();
         reiniciar()
         return
     }
+    audioPlay.play();
     idIntervalo = setInterval(cuentaRegresiva,1000)
 }
 
 function reiniciar(){
   clearInterval(idIntervalo)  
   idIntervalo = null
+  textoIniciarPausar.textContent = "Comenzar"
 }
